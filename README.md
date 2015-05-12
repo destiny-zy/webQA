@@ -1,2 +1,2 @@
 # webQA
-based on spring-boot
+use websocket based on spring-boot
