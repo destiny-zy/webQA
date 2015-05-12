@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>webQA</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.jsdelivr.net/sockjs/0.3.4/sockjs.min.js"></script>
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	var ws = null;
+	connect();
+
+
+
+	function connect() {
+		ws = new SockJS("/my");
+		ws.onopen = function() {
+
+		};
+		ws.onmessage = function(event) {
+			$("#content").val(event.data);
+		};
+		ws.onclose = function() {
+
+		};
+	}
+
+	function disconnect() {
+		if (ws != null) {
+			ws.close();
+			ws = null;
+		}
+	}
+
+	function select() {
+		if (ws != null) {
+			var message = $("#chenyu").val();
+			ws.send(message);
+		} else {
+			alert('请先建立连接');
+		}
+	}
+
+	function log(message) {
+		var console = document.getElementById('console');
+		var p = document.createElement('p');
+		p.style.wordWrap = 'break-word';
+		p.appendChild(document.createTextNode(message));
+		console.appendChild(p);
+		while (console.childNodes.length > 25) {
+			console.removeChild(console.firstChild);
+		}
+		console.scrollTop = console.scrollHeight;
+	}
+</script>
+</head>
+<body>
+	<noscript>
+		<h2>Seems your browser doesn't support Javascript! Websockets rely on Javascript being enabled. Please
+			enable Javascript and reload this page!</h2>
+	</noscript>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="page-header">
+				<h1 style="text-align: center;">
+					Websocket<small>&nbsp;sample</small>
+				</h1>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-offset-4 col-md-3">
+				<input id="chenyu" type="text" class="form-control"
+					placeholder="请输入成语">
+			</div>
+			<div class="col-md-2">
+				<button id="select" class="btn btn-primary" onclick="select()">查询</button>
+			</div>
+		</div></br>
+		<div class="row">
+			<div class="col-md-4"></div>
+			<textarea rows="10" cols="60" id="content"></textarea>
+			
+		</div>
+	</div>
+</body>
+</html>
