@@ -10,20 +10,39 @@
 <script src="/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	var ws = null;
-	connect();
-
-
+	var his_log="";
 
 	function connect() {
 		ws = new SockJS("/my");
 		ws.onopen = function() {
-
+			var username = $("#username").val();
+			var jsonMsg = {};
+			jsonMsg.type="join";
+			jsonMsg.username=username;
+			jsonString = JSON.stringify(jsonMsg);
+			ws.send(jsonString);
+			$("#join").attr("disabled",true);
 		};
 		ws.onmessage = function(event) {
-			$("#content").val(event.data);
+			var data = JSON.parse(event.data);
+			switch(data.type){
+			case "select":
+				log(data.result);
+				break;
+			case "join":
+				log("用户:"+data.userName+"加入了！");
+				break;
+			case "userlist":
+				loguser(data.users);
+				break;
+			case "leave":
+				log("用户:"+data.userName+"离开了！");
+				break;
+			}
+			$("#content").scrollTop(999999);
 		};
 		ws.onclose = function() {
-
+			
 		};
 	}
 
@@ -36,30 +55,41 @@
 
 	function select() {
 		if (ws != null) {
-			var message = $("#chenyu").val();
-			ws.send(message);
+			var word = $("#chenyu").val();
+			var jsonMsg = {};
+			jsonMsg.type="select";
+			jsonMsg.word=word;
+			jsonString = JSON.stringify(jsonMsg);
+			ws.send(jsonString);
 		} else {
-			alert('请先建立连接');
+			alert('请先加入');
 		}
 	}
 
 	function log(message) {
-		var console = document.getElementById('console');
-		var p = document.createElement('p');
-		p.style.wordWrap = 'break-word';
-		p.appendChild(document.createTextNode(message));
-		console.appendChild(p);
-		while (console.childNodes.length > 25) {
-			console.removeChild(console.firstChild);
+		if(his_log != ""){
+			his_log+="\r\n";
 		}
-		console.scrollTop = console.scrollHeight;
+		his_log+=message;
+		$("#content").val(his_log);
 	}
+	
+	function loguser(message) {
+		var loguser="";
+		for(i=0;i<message.length;i++){
+			loguser+=message[i];
+			loguser+="\r\n";
+			$("#userlist").val(loguser);
+		}
+	}
+
 </script>
 </head>
 <body>
 	<noscript>
-		<h2>Seems your browser doesn't support Javascript! Websockets rely on Javascript being enabled. Please
-			enable Javascript and reload this page!</h2>
+		<h2>Seems your browser doesn't support Javascript! Websockets
+			rely on Javascript being enabled. Please enable Javascript and reload
+			this page!</h2>
 	</noscript>
 	<div class="container-fluid">
 		<div class="row">
@@ -69,19 +99,35 @@
 				</h1>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-md-offset-4 col-md-3">
-				<input id="chenyu" type="text" class="form-control"
-					placeholder="请输入成语">
+		<br>
+		<div class="col-md-offset-2 col-md-5">
+			<div class="row">
+				<div class="col-md-6">
+					<input id="username" type="text" class="form-control"
+						placeholder="请输入用户名">
+				</div>
+				<div class="col-md-1">
+					<button id="join" class="btn btn-info" onclick="connect()">加入</button>
+				</div>
 			</div>
-			<div class="col-md-2">
-				<button id="select" class="btn btn-primary" onclick="select()">查询</button>
+			<br>
+			<div class="row">
+				<div class="col-md-6">
+					<input id="chenyu" type="text" class="form-control"
+						placeholder="请输入成语">
+				</div>
+				<div class="col-md-1">
+					<button id="select" class="btn btn-primary" onclick="select()">查询</button>
+				</div>
 			</div>
-		</div></br>
-		<div class="row">
-			<div class="col-md-4"></div>
-			<textarea rows="10" cols="60" id="content"></textarea>
-			
+			<br>
+			<div class="row">
+				<textarea rows="15" cols="60" id="content"></textarea>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<label>在线用户列表：</label>
+			<textarea id="userlist" rows="19" cols="20"></textarea>
 		</div>
 	</div>
 </body>

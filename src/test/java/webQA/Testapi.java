@@ -1,8 +1,14 @@
 package webQA;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
 import cn.zy.util.Utils;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Testapi {
 
@@ -18,5 +24,15 @@ public class Testapi {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Test
+	public void s1() throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("type", "log");
+		map.put("message", "用户:加入！");
+		System.out.println(mapper.writeValueAsString(map));
+
 	}
 }
