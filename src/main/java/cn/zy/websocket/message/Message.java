@@ -1,5 +1,9 @@
 package cn.zy.websocket.message;
 
+/*
+ * 消息基类
+ * 消息类型:type
+ */
 public class Message {
 
 	private String type;
