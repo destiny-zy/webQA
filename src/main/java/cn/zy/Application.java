@@ -9,6 +9,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.handler.PerConnectionWebSocketHandler;
 
 import cn.zy.websocket.WebsocketHandler;
 
@@ -39,7 +40,7 @@ public class Application extends SpringBootServletInitializer implements
 
 	@Bean
 	public WebSocketHandler myWebSocket() {
-		return new WebsocketHandler();
+		return new PerConnectionWebSocketHandler(WebsocketHandler.class);
 	}
 
 }

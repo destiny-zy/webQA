@@ -1,5 +1,6 @@
 package cn.zy.websocket;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import cn.zy.util.Utils;
+import cn.zy.websocket.message.ChatMessage;
 import cn.zy.websocket.message.SelectMessage;
 import cn.zy.websocket.message.UserListMessage;
 import cn.zy.websocket.message.UserMessage;
@@ -48,6 +50,27 @@ public class WebsocketHandler extends TextWebSocketHandler {
 			// 发送用户在线列表
 			SendUserList();
 			break;
+		case "chatToOne":
+			ChatMessage chat = new ChatMessage("chat");
+			ChatMessage chatself = new ChatMessage("chat");
+			String target = rootNode.get("target").asText();
+			String content = rootNode.get("word").asText();
+			if (lists.containsKey(target)) {
+				chat.setContent("用户" + username + "对你说：" + content);
+				chatself.setContent("你对" + target + "说：" + content);
+				sendToOne(session, mapper.writeValueAsString(chatself));
+				sendToOne(lists.get(target), mapper.writeValueAsString(chat));
+			} else {
+				chat.setContent("该用户当前不在线");
+				sendToOne(session, mapper.writeValueAsString(chat));
+			}
+			break;
+		case "chatToAll":
+			ChatMessage chat1 = new ChatMessage("chat");
+			chat1.setContent("用户" + username + "对所有人说："
+					+ rootNode.get("word").asText());
+			sendToAll(mapper.writeValueAsString(chat1));
+			break;
 		case "select":
 			String word = rootNode.get("word").asText();
 			String url = "http://v.juhe.cn/chengyu/query?key=" + Utils.appkey
@@ -57,12 +80,13 @@ public class WebsocketHandler extends TextWebSocketHandler {
 			SelectMessage selectMessage = new SelectMessage("select");
 			log.info(res);
 			if (res != null) {
+				String pre = "@" + username + ":";
 				JsonNode node = mapper.readTree(res);
 				if (node.get("reason").asText().equals("success")) {
-					selectMessage.setResult(node.get("result").get("chengyujs")
-							.asText());
+					selectMessage.setResult(pre
+							+ node.get("result").get("chengyujs").asText());
 				} else {
-					selectMessage.setResult(node.get("reason").asText());
+					selectMessage.setResult(pre + node.get("reason").asText());
 				}
 			}
 			sendToAll(mapper.writeValueAsString(selectMessage));
@@ -70,6 +94,16 @@ public class WebsocketHandler extends TextWebSocketHandler {
 
 		default:
 			break;
+		}
+
+	}
+
+	private void sendToOne(WebSocketSession session, String message) {
+		try {
+			session.sendMessage(new TextMessage(message));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
