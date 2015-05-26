@@ -8,7 +8,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 public class Utils {
-	public static final String appkey = "b8b928a2b236bb27dd6716c3e2b094b9";
+	public static final String appkey = "F1u4I3u1X315O1i0T2Z6TD1GPgAXftcCdVVHHJvg";
 
 	public static String requestApi(String url) {
 		String res = null;
@@ -31,5 +31,10 @@ public class Utils {
 			e.printStackTrace();
 		}
 		return res;
+	}
+
+	public static String getUrl(String word) {
+		return "http://ltpapi.voicecloud.cn/analysis/?api_key=" + appkey
+				+ "&pattern=all&text=" + word + "&format=json";
 	}
 }
