@@ -7,6 +7,12 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+/**
+ * request api
+ * 
+ * @author zy
+ *
+ */
 public class Utils {
 	public static final String appkey = "F1u4I3u1X315O1i0T2Z6TD1GPgAXftcCdVVHHJvg";
 

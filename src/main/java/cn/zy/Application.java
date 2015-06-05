@@ -14,10 +14,11 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 
 import cn.zy.websocket.WebsocketHandler;
 
-/*
+/**
  * 程序入口
  * 
  * @author zy
+ *
  */
 @SpringBootApplication
 @EnableWebSocket

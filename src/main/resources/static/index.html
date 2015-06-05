@@ -88,7 +88,7 @@
 									class="form-control" required />
 							</div>
 						</div>
-						<div class="form-group ">
+						<!-- <div class="form-group ">
 							<label class="control-label col-md-4">头像</label>
 							<div class="col-md-8">
 								<div class="fileinput fileinput-new" data-provides="fileinput">
@@ -105,7 +105,7 @@
 									</div>
 								</div>
 							</div>
-						</div>
+						</div> -->
 
 						<div class="form-actions">
 							<div class="row">
@@ -558,12 +558,12 @@
 				}
 			};
 			ws.onmessage = function(event) {
-				var data = JSON.parse(event.data);
+				data = JSON.parse(event.data);
 				switch (data.type) {
 				case "mapsearch":
 					list.append(getOutputMapContent(data));
 					var myGeo = new BMap.Geocoder();
-					var map = new BMap.Map(data.mapid); // 创建Map实例 
+					map = new BMap.Map(data.mapid); // 创建Map实例 
 					map.enableScrollWheelZoom();
 
 					myGeo.getPoint(data.location, function(point) {
@@ -576,7 +576,7 @@
 								strokeOpacity : 0.3
 							});
 							map.addOverlay(circle);
-							var local = new BMap.LocalSearch(map, {
+							local = new BMap.LocalSearch(map, {
 								renderOptions : {
 									map : map,
 									autoViewport : false,
@@ -592,15 +592,16 @@
 					break;
 				case "maptransit":
 					list.append(getOutputMapContent(data));
-					var map = new BMap.Map(data.mapid);
+					map = new BMap.Map(data.mapid);
 					map.clearOverlays();
 					map.centerAndZoom("天津", 12);
 					map.enableScrollWheelZoom();
 
-					var transit = new BMap.TransitRoute(map, {
+					transit = new BMap.TransitRoute(map, {
 						renderOptions: {map: map, panel: data.resultid}
 					});
 					transit.search(data.home, data.destination);
+					
 					break;
 				case "chat":
 					list.append(getOutputContent(data));
@@ -619,6 +620,32 @@
 			ws.onclose = function() {
 				ws.close();
 			};
+		}
+		function gongjiao(){
+			map.clearOverlays();
+			map.centerAndZoom("天津", 12);
+			map.enableScrollWheelZoom();
+
+			transit = new BMap.TransitRoute(map, {
+				renderOptions: {map: map, panel: data.resultid}
+			});
+			transit.search(data.home, data.destination);
+		}
+		function buxing(){
+			map.clearOverlays();
+			map.centerAndZoom("天津", 14);
+			map.enableScrollWheelZoom();
+			
+			walking = new BMap.WalkingRoute(map, {renderOptions:{map: map, panel: data.resultid}});
+			walking.search(data.home, data.destination);
+		}
+		function jiache(){
+			map.clearOverlays();
+			map.centerAndZoom("天津", 14);
+			map.enableScrollWheelZoom();
+			
+			drive = new BMap.DrivingRoute(map, {renderOptions:{map: map, panel: data.resultid}});
+			drive.search(data.home, data.destination);
 		}
 		function userSend() {
 			if (ws != null) {

@@ -102,8 +102,15 @@ public class WebsocketHandler extends AbstractWebSocketHandler {
 						}
 					}
 					if (!home.equals("")) {
-						sendToAll(getMapTransitMessage(home, destination, pre
-								+ "从" + home + "到" + destination + "的公交路线"));
+						sendToAll(getMapTransitMessage(
+								home,
+								destination,
+								pre
+										+ "从"
+										+ home
+										+ "到"
+										+ destination
+										+ "的<a onclick=\"gongjiao()\">公交</a>路线如下,您也可以选择<a onclick=\"buxing()\">步行</a>或者<a onclick=\"jiache()\">驾车</a>路线。"));
 						destination = "";
 						home = "";
 					} else {
@@ -158,8 +165,15 @@ public class WebsocketHandler extends AbstractWebSocketHandler {
 						sendToAll(getRobotMessage(pre
 								+ "sorry,不明白您说的意思,请告诉我正确的地理位置……"));
 					} else {
-						sendToAll(getMapTransitMessage(home, destination, pre
-								+ "从" + home + "到" + destination + "的公交路线"));
+						sendToAll(getMapTransitMessage(
+								home,
+								destination,
+								pre
+										+ "从"
+										+ home
+										+ "到"
+										+ destination
+										+ "的<a onclick=\"gongjiao()\">公交</a>路线如下,您也可以选择<a onclick=\"buxing()\">步行</a>或者<a onclick=\"jiache()\">驾车</a>路线。"));
 						home = "";
 						destination = "";
 					}
