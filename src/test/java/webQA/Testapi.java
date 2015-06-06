@@ -17,7 +17,7 @@ public class Testapi {
 	@Test
 	public void ss() {
 		try {
-			String ss = "http://ltpapi.voicecloud.cn/analysis/?api_key=F1u4I3u1X315O1i0T2Z6TD1GPgAXftcCdVVHHJvg&pattern=all&text=南开大学到白堤路&format=json";
+			String ss = "http://ltpapi.voicecloud.cn/analysis/?api_key=F1u4I3u1X315O1i0T2Z6TD1GPgAXftcCdVVHHJvg&pattern=all&text=南开大学到北京大学&format=json";
 			// String res =
 			// Request.Get(ss).execute().returnContent().asString();
 			String res = Utils.requestApi(ss);
